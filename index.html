@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Document Intelligence | Junaid Zulfiqar</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background: #f5f7fb;
+            color: #172033;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #ffffff;
+            border-bottom: 1px solid #e7eaf0;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: 800;
+            color: #172033;
+        }
+
+        .logo span {
+            color: #5b5ce2;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #667085;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+        }
+
+        main {
+            max-width: 1050px;
+            margin: 0 auto;
+            padding: 55px 20px 40px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #ececff;
+            color: #5556d9;
+            padding: 7px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            font-size: clamp(34px, 5vw, 54px);
+            line-height: 1.1;
+            margin-bottom: 15px;
+            letter-spacing: -1.5px;
+        }
+
+        .hero p {
+            color: #667085;
+            max-width: 650px;
+            margin: auto;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(20, 30, 60, 0.05);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 750;
+            margin-bottom: 6px;
+        }
+
+        .card-description {
+            font-size: 13px;
+            color: #7b8495;
+            margin-bottom: 22px;
+        }
+
+        .upload-box {
+            border: 2px dashed #d5d9e2;
+            border-radius: 14px;
+            padding: 35px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #fafbff;
+        }
+
+        .upload-box:hover {
+            border-color: #6566e8;
+            background: #f7f7ff;
+        }
+
+        .upload-icon {
+            width: 55px;
+            height: 55px;
+            margin: 0 auto 14px;
+            background: #eeeeff;
+            color: #5b5ce2;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+        }
+
+        .upload-box strong {
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        .upload-box small {
+            color: #8a92a2;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-info {
+            display: none;
+            margin-top: 15px;
+            background: #f2f4f8;
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #475467;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 135px;
+            resize: vertical;
+            border: 1px solid #dfe3ea;
+            border-radius: 12px;
+            padding: 15px;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        textarea:focus {
+            border-color: #6566e8;
+            box-shadow: 0 0 0 3px rgba(91, 92, 226, 0.1);
+        }
+
+        .examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .example {
+            background: #f3f4f7;
+            border: none;
+            padding: 8px 11px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            color: #555e70;
+        }
+
+        .example:hover {
+            background: #e9eaff;
+            color: #5556d9;
+        }
+
+        .button-wrapper {
+            margin-top: 20px;
+        }
+
+        button.analyze {
+            width: 100%;
+            border: none;
+            background: #5b5ce2;
+            color: white;
+            padding: 14px;
+            border-radius: 11px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button.analyze:hover {
+            background: #4c4dcc;
+        }
+
+        button.analyze:disabled {
+            background: #a7a8df;
+            cursor: not-allowed;
+        }
+
+        .result-card {
+            margin-top: 22px;
+            display: none;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .confidence {
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: #eaf8ef;
+            color: #16803c;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .answer-box {
+            background: #f8f9fc;
+            border: 1px solid #e8eaf0;
+            border-radius: 13px;
+            padding: 18px;
+            line-height: 1.7;
+            color: #344054;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+
+        .source-box {
+            margin-top: 14px;
+            padding: 14px;
+            background: #f7f7ff;
+            border-left: 4px solid #5b5ce2;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #596174;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 25px;
+            margin-top: 22px;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #e4e5f5;
+            border-top-color: #5b5ce2;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error {
+            display: none;
+            margin-top: 15px;
+            padding: 13px;
+            border-radius: 9px;
+            background: #fff0f0;
+            color: #c53030;
+            font-size: 13px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #8a92a2;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        footer strong {
+            color: #5556d9;
+        }
+
+        @media (max-width: 800px) {
+            header {
+                padding: 17px 5%;
+            }
+
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            main {
+                padding-top: 35px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Doc<span>AI</span></div>
+
+    <div class="status">
+        <span class="status-dot"></span>
+        AI System Online
+    </div>
+</header>
+
+<main>
+
+    <section class="hero">
+        <div class="badge">AI DOCUMENT INTELLIGENCE</div>
+
+        <h1>Ask Your Documents.</h1>
+
+        <p>
+            Upload a document, ask a question, and get accurate
+            AI-powered answers based on the information inside your document.
+        </p>
+    </section>
+
+    <section class="container">
+
+        <div class="card">
+            <div class="card-title">Upload Document</div>
+
+            <div class="card-description">
+                Add the document you want the AI to analyze.
+            </div>
+
+            <label class="upload-box" for="fileInput">
+                <div class="upload-icon">📄</div>
+                <strong>Click to upload a document</strong>
+                <small>PDF, TXT or supported document</small>
+            </label>
+
+            <input
+                type="file"
+                id="fileInput"
+                accept=".pdf,.txt,.doc,.docx"
+            >
+
+            <div class="file-info" id="fileInfo"></div>
+        </div>
+
+        <div class="card">
+
+            <div class="card-title">Ask a Question</div>
+
+            <div class="card-description">
+                Ask anything related to the uploaded document.
+            </div>
+
+            <textarea
+                id="question"
+                placeholder="Example: What are the main requirements mentioned in this document?"
+            ></textarea>
+
+            <div class="examples">
+                <button class="example"
+                    onclick="setQuestion('Summarize this document.')">
+                    Summarize
+                </button>
+
+                <button class="example"
+                    onclick="setQuestion('What are the main requirements?')">
+                    Requirements
+                </button>
+
+                <button class="example"
+                    onclick="setQuestion('What are the important deadlines?')">
+                    Deadlines
+                </button>
+
+                <button class="example"
+                    onclick="setQuestion('List the key points from this document.')">
+                    Key Points
+                </button>
+            </div>
+
+            <div class="button-wrapper">
+                <button
+                    class="analyze"
+                    id="analyzeBtn"
+                    onclick="analyzeDocument()">
+                    ✨ Analyze Document
+                </button>
+            </div>
+
+        </div>
+
+    </section>
+
+    <div class="card loading" id="loading">
+        <div class="spinner"></div>
+
+        <strong>Analyzing your document...</strong>
+
+        <p style="font-size:13px;color:#7b8495;margin-top:6px;">
+            Please wait while AI processes your request.
+        </p>
+    </div>
+
+    <div class="error" id="error"></div>
+
+    <div class="card result-card" id="result">
+
+        <div class="result-header">
+
+            <div>
+                <div class="card-title">AI Response</div>
+
+                <div class="card-description" style="margin-bottom:0;">
+                    Generated from your document
+                </div>
+            </div>
+
+            <div class="confidence" id="confidence">
+                Medium Confidence
+            </div>
+
+        </div>
+
+        <div class="answer-box" id="answer"></div>
+
+        <div class="source-box">
+            <strong>📌 Source:</strong>
+            <span id="source"></span>
+        </div>
+
+    </div>
+
+</main>
+
+<footer>
+    © 2026 Junaid Zulfiqar. All Rights Reserved.
+    <br>
+    Developed by <strong>Junaid Zulfiqar</strong>
+</footer>
+
+<script>
+
+const WEBHOOK_URL =
+    "https://junaidzulfiqarrr.app.n8n.cloud/webhook/AI-DOCUMENT-Q/A";
+
+const fileInput = document.getElementById("fileInput");
+const fileInfo = document.getElementById("fileInfo");
+
+fileInput.addEventListener("change", function () {
+
+    const file = this.files[0];
+
+    if (!file) {
+        fileInfo.style.display = "none";
+        return;
+    }
+
+    fileInfo.style.display = "block";
+
+    fileInfo.innerHTML =
+        "📄 <strong>" +
+        escapeHTML(file.name) +
+        "</strong> (" +
+        formatFileSize(file.size) +
+        ")";
+
+});
+
+function setQuestion(text) {
+    document.getElementById("question").value = text;
+}
+
+function formatFileSize(bytes) {
+
+    if (bytes < 1024)
+        return bytes + " B";
+
+    if (bytes < 1024 * 1024)
+        return (bytes / 1024).toFixed(1) + " KB";
+
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+}
+
+function escapeHTML(text) {
+
+    const div = document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+}
+
+/*
+ * Converts nested n8n/AI responses into a usable object.
+ * This prevents [object Object] from appearing in the UI.
+ */
+function normalizeResponse(data) {
+
+    let current = data;
+
+    if (Array.isArray(current)) {
+        current = current[0] || {};
+    }
+
+    /*
+     * Sometimes n8n returns:
+     * { body: {...} }
+     */
+    if (
+        current &&
+        typeof current.body === "object" &&
+        current.body !== null
+    ) {
+        current = current.body;
+    }
+
+    /*
+     * Sometimes the AI result is inside output.
+     */
+    if (
+        current &&
+        typeof current.output === "object" &&
+        current.output !== null &&
+        !current.answer
+    ) {
+        current = current.output;
+    }
+
+    /*
+     * Sometimes answer itself is an object:
+     * {
+     *   answer: {
+     *      answer: "...",
+     *      confidence: "...",
+     *      source: "..."
+     *   }
+     * }
+     */
+    if (
+        current &&
+        typeof current.answer === "object" &&
+        current.answer !== null
+    ) {
+        current = current.answer;
+    }
+
+    return current || {};
+}
+
+function valueToText(value, fallback = "") {
+
+    if (value === null || value === undefined) {
+        return fallback;
+    }
+
+    if (typeof value === "string") {
+        return value;
+    }
+
+    if (typeof value === "number" || typeof value === "boolean") {
+        return String(value);
+    }
+
+    /*
+     * If an object is still returned, try common nested fields.
+     */
+    if (typeof value === "object") {
+
+        if (typeof value.answer === "string") {
+            return value.answer;
+        }
+
+        if (typeof value.text === "string") {
+            return value.text;
+        }
+
+        if (typeof value.output === "string") {
+            return value.output;
+        }
+
+        return JSON.stringify(value, null, 2);
+    }
+
+    return String(value);
+}
+
+async function analyzeDocument() {
+
+    const file = fileInput.files[0];
+
+    const question =
+        document.getElementById("question").value.trim();
+
+    const button =
+        document.getElementById("analyzeBtn");
+
+    const loading =
+        document.getElementById("loading");
+
+    const result =
+        document.getElementById("result");
+
+    const error =
+        document.getElementById("error");
+
+    error.style.display = "none";
+    result.style.display = "none";
+
+    if (!file) {
+        showError("Please upload a document first.");
+        return;
+    }
+
+    if (!question) {
+        showError("Please enter a question.");
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "⏳ Analyzing...";
+
+    loading.style.display = "block";
+
+    try {
+
+        const formData = new FormData();
+
+        formData.append("question", question);
+        formData.append("document", file);
+
+        const response = await fetch(
+            WEBHOOK_URL,
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                "Webhook returned HTTP " + response.status
+            );
+        }
+
+        const data = await response.json();
+
+        console.log("n8n Response:", data);
+
+        /*
+         * Normalize the response so nested objects
+         * are handled correctly.
+         */
+        const output = normalizeResponse(data);
+
+        console.log("Normalized output:", output);
+
+        const answer = valueToText(
+            output.answer ||
+            output.text ||
+            output.output,
+            "No answer was returned."
+        );
+
+        const confidence = valueToText(
+            output.confidence,
+            "Medium"
+        );
+
+        const source = valueToText(
+            output.source,
+            "Provided document"
+        );
+
+        document.getElementById("answer").textContent =
+            answer;
+
+        document.getElementById("source").textContent =
+            source;
+
+        document.getElementById("confidence").textContent =
+            confidence + " Confidence";
+
+        result.style.display = "block";
+
+        result.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    } catch (err) {
+
+        console.error("AI workflow error:", err);
+
+        showError(
+            "Unable to connect to the AI workflow. Please check your n8n webhook and CORS settings."
+        );
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "✨ Analyze Document";
+
+        loading.style.display = "none";
+    }
+}
+
+function showError(message) {
+
+    const error =
+        document.getElementById("error");
+
+    error.textContent = "⚠️ " + message;
+
+    error.style.display = "block";
+}
+
+</script>
+
+</body>
+</html>
