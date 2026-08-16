@@ -9,6 +9,8 @@ This project is **Day 10 of my 30 Days AI Automation Challenge**, where I am bui
 🚀 **Live Website:**  
 https://junaidzulfiqar07.github.io/AI-Document-Intelligence/
 
+> ⚠️ **Live Demo Availability:** The live demo will be available until **25th August 2026** only.
+
 ## 📌 Project Overview
 
 **AI Document Intelligence & Q&A** is a web-based document analysis and question-answering system designed to make it easier to understand and interact with uploaded documents.
@@ -179,6 +181,8 @@ The frontend is deployed using **GitHub Pages**.
 ### Live Application
 
 https://junaidzulfiqar07.github.io/AI-Document-Intelligence/
+
+**Live Demo Availability:** Until **25th August 2026** only.
 
 ## 📈 Future Improvements
 
